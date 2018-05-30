@@ -1,0 +1,4 @@
+weather-api==1.0.3
+requests==2.18.3
+aws-xray-sdk==0.95
+boto3==1.7.29

@@ -1,0 +1,13 @@
+{
+  "version": "2.0",
+  "app_name": "xray-weather-sample",
+  "stages": {
+    "dev": {
+      "environment_variables": {
+        "XRAY_DYNAMO_TABLE": "xray-test-f3c5a5cc-5cf7-4c84-9cb9-ecb4248d24bf",
+        "XRAY_SNS_TOPIC": "arn:aws:sns:ap-southeast-2:011034713097:xray-test-topic"
+      },
+      "api_gateway_stage": "api"
+    }
+  }
+}
