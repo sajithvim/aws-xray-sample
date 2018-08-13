@@ -4,7 +4,8 @@ import requests
 import json
 import os
 import boto3
-from aws_xray_sdk.core import patch_all
+from concurrent.futures import ThreadPoolExecutor
+from aws_xray_sdk.core import patch_all, xray_recorder
 
 app = Chalice(app_name='xray-weather-sample')
 
@@ -15,17 +16,17 @@ def index():
     try:
         data = fetch_weather_data()
         formatted_data = format_data(data)
+        xray_recorder.begin_subsegment('mysub')
         update_database(json.loads(formatted_data)['data'])
         notify_sns(json.loads(formatted_data)['data'])
+        xray_recorder.end_subsegment()
         return formatted_data
     except Exception as e:
         print(e)
-        return e
 
 
 @app.route('/trim', methods=['POST'], content_types=['application/x-www-form-urlencoded', 'application/json'])
 def trim_data():
-    patch_all()
     try:
         request = app.current_request
         data = request.raw_body.decode("utf-8")
@@ -64,12 +65,15 @@ def format_data(data):
 def update_database(data):
     resource = boto3.resource('dynamodb')
     table = resource.Table(os.environ['XRAY_DYNAMO_TABLE'])
-    table.delete
     if isinstance(data, list):
-        for d in data:
-            table.put_item(
-                Item=d
-            )
+        # for d in data:
+        #     table.put_item(
+        #         Item=d
+        #     )
+
+        with ThreadPoolExecutor(max_workers=5) as insert_db_executor:
+            for d in data:
+                insert_db_executor.submit(table.put_item,  Item=d)
 
 
 def notify_sns(data):
