@@ -1,0 +1,12 @@
+
+xray-weather-sample/jmeter\.log
+
+xray-weather-sample/\.vscode/settings\.json
+
+\.DS_Store
+
+\.vscode/launch\.json
+
+*.pyc
+
+xray-weather-sample/\.vscode/\.ropeproject/

@@ -84,4 +84,3 @@ def notify_sns(data):
             {'default': json.dumps(data)}),
         MessageStructure='json'
     )
-    print('notify_sns')

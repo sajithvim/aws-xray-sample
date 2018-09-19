@@ -4,10 +4,12 @@
   "stages": {
     "dev": {
       "environment_variables": {
-        "XRAY_DYNAMO_TABLE": "xray-test-f3c5a5cc-5cf7-4c84-9cb9-ecb4248d24bf",
-        "XRAY_SNS_TOPIC": "arn:aws:sns:ap-southeast-2:011034713097:xray-test-topic"
+        "XRAY_DYNAMO_TABLE": "xray-test-3236abc3-2000-471d-8c01-2f75aa181417",
+        "XRAY_SNS_TOPIC": "arn:aws:sns:ap-southeast-2:329193457145:xray-test"
       },
-      "api_gateway_stage": "api"
+      "api_gateway_stage": "api",
+      "manage_iam_role": false,
+      "iam_role_arn": "arn:aws:iam::329193457145:role/xray-test-role"
     }
   }
 }

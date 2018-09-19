@@ -42,9 +42,15 @@ def create_table(table_config):
     waiter = client.get_waiter('table_exists')
     waiter.wait(TableName=table_name, WaiterConfig={'Delay': 1})
     return table_name
+    
+def create_sns_topic():
+    sns_client = boto3.client('sns', "ap-southeast-2")
+    sns_topic_arn = sns_client.create_topic( Name = "x-ray-topic")['TopicArn']  
+    return sns_topic_arn   
 
 
-def record_as_env_var(key, value, stage):
+def record_as_env_var(key, value, stage:None):
+
     with open(os.path.join('.chalice', 'config.json')) as f:
         data = json.load(f)
         data['stages'].setdefault(stage, {}).setdefault(
@@ -58,8 +64,6 @@ def record_as_env_var(key, value, stage):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--stage', default='dev')
-    # app - stores the todo items
-    # users - stores the user data.
     parser.add_argument('-t', '--table-type', default='xray',
                         choices=['xray'],
                         help='Specify which type to create')
@@ -69,7 +73,6 @@ def main():
         table_config
     )
     record_as_env_var(table_config['env_var'], table_name, args.stage)
-
 
 if __name__ == '__main__':
     main()
