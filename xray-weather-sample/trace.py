@@ -9,7 +9,7 @@ def main():
     start_process()
 
 def start_process():
-    response = client.get_trace_summaries(StartTime=datetime(2018,9,19,5,25), EndTime=datetime(2018,9,19,5,59))
+    response = client.get_trace_summaries(StartTime=datetime(2018,9,20,3,47), EndTime=datetime(2018,9,20,3,59))
     traces = response["TraceSummaries"]
     if traces is not None and len(list(traces)) > 0:
         trace_ids =[]
@@ -51,10 +51,10 @@ def gather_data(trace_ids):
 
 def write_to_files(buckets):
     for bucket_name, bucket in buckets.items():
-        file_name = "{}/{}.csv".format("data",str(bucket_name).replace("/","-"))
+        file_name = "{}/{}.csv".format("data",str(bucket_name).replace("/","-").replace("::", "-"))
         with open(file_name, "w") as csvfile:
             writer = csv.writer(csvfile, delimiter=",")
-            writer.writerow(["total-response-time", "type", "duration-time-hist", "response-time-hist", "init-cost"])
+            writer.writerow(["TotalResponseTime", "type", "DurationTimeHist", "ResponseTimeHist", "InitCost"])
             data = bucket.get("data")
             for element in data:
                 writer.writerow([element["total-response-time"], element["type"],element["duration-time-hist"], element["response-time-hist"], element["init-cost"]])
